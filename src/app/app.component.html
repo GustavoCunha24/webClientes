@@ -1,0 +1,229 @@
+
+<div class="container mt-3">  
+<h1>Sistema de controle de clientes </h1>
+<p>Projeto desenvolvido em Angular com API Spring Boot.</p>
+
+<div class="mb =3 text-start">
+    <button class="btn btn-success btn-sm"
+    data-bs-toggle="modal" 
+    data-bs-target="#cadastrarCliente">
+      Adicionar Cliente
+  </button>
+
+       
+</div>
+
+<table class="table table-bordered">
+    <thead> <!--Cabeçalho da tabela-->
+        <tr> <!--Linha-->
+            <th>ID</th> <!--Coluna de título-->
+            <th>NOME DO CLIENTE</th> <!--Coluna de título-->
+            <th>EMAIL</th> <!--Coluna de título-->
+            <th>TELEFONE</th> <!--Coluna de título-->
+            <th>OPERAÇÕES</th>
+
+        </tr>
+    </thead>
+    <tbody> <!--corpo da tabela-->
+      <tr *ngFor="let c of clientes">
+        <td>{{c.idCliente}}</td>
+        <td>{{c.nomeCliente}}</td>
+        <td>{{c.emailCliente}}</td>
+        <td>{{c.telefoneCliente}}</td>
+        <td>
+          <button (click)="obterCliente(c)"
+           data-bs-toggle="modal" data-bs-target="#atualizarCliente" 
+              class="btn btn-sm btn-outline-primary me-1">
+              Editar
+          </button>
+          <button (click)="excluirCliente(c.idCliente)" 
+          class="btn btn-sm btn-outline-danger">
+              Excluir
+          </button>
+          
+        </td>
+        
+      </tr>
+
+    </tbody>
+    <tfoot> <!--Rodapé da tabela-->
+        <tr>
+
+            <td colspan="5"> <!--célula comm a largura de 4 colunas-->
+                QUANTIDADE DE CLIENTES: {{clientes.length}}
+
+            </td>
+        </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Modal para cadastro de clientes -->
+<div class="modal fade" id="cadastrarCliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastrar Cliente</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       
+          
+
+            <form [formGroup]="formCadastro" (ngSubmit)="cadastrarCliente()"> 
+
+
+              <div class="mb-2">
+                  <label>Nome do cliente:</label>
+                  <input type="text" class="form-control"
+                      placeholder="Digite o nome aqui."
+                      formControlName ="nomeCliente"/>
+                      
+                      <div class="text-danger"
+                      *ngIf="fCadastro['nomeCliente'].touched && fCadastro['nomeCliente'].invalid">
+                      Por favor, informe o nome com pelo menos 8 caracteres.
+                  </div>
+
+                </div>
+
+
+              <div class="mb-2">
+                  <label>Email do cliente:</label>
+                  <input type="text" class="form-control"
+                      placeholder="Digite o email aqui."
+                      formControlName="emailCliente"/>
+              </div>
+              <div class="text-danger"
+                      *ngIf="fCadastro['emailCliente'].touched && fCadastro['emailCliente'].invalid">
+                      Por favor, inform um endereço de email válido.
+                  </div>
+
+
+              <div class="mb-2">
+                  <label>Telefone do cliente:</label>
+                  <input type="text" class="form-control"
+                      placeholder="Digite o telefone aqui."
+                      formControlName="telefoneCliente"/>
+              </div>
+
+              <div class="text-danger"
+                      *ngIf="fCadastro['telefoneCliente'].touched && fCadastro['telefoneCliente'].invalid">
+                      Por favor, informe um telefone com exatamente 11 dígitos (Ex:21987654321).
+                  </div>
+
+
+              <div class="mb-2 d-grid">
+                  <input type="submit" class="btn btn-success btn-sm"
+                      [disabled]="formCadastro.invalid"
+                      data-bs-dismiss="modal"
+                      value="Realizar Cadastro"/>
+              </div>
+
+
+          </form>
+
+
+
+          </div>
+            
+        </div>
+    </div>
+  </div>
+
+  <!-- Modal para atualização de clientes -->
+<div class="modal fade" id="atualizarCliente" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Atualizar Cliente</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       
+          <form [formGroup]="formEdicao" (ngSubmit)="atualizarCliente()">
+
+
+              <div class="mb-2">
+                  <label>ID do cliente:</label>
+                  <input type="text" class="form-control" readonly
+                    formControlName="idCliente" />
+
+              </div>
+
+
+              <div class="mb-2">
+                  <label>Nome do cliente:</label>
+                  <input type="text" class="form-control"
+                      placeholder="Digite o nome aqui."
+                      formControlName="nomeCliente"/>
+
+                  
+               <div class="text-danger"
+               *ngIf="fEdicao['nomeCliente'].touched && fEdicao['nomeCliente'].invalid">
+               Informe o nome para a edição com pelo menos 8 caracteres.
+
+
+               </div>       
+
+
+              </div>
+
+
+              <div class="mb-2">
+                  <label>Email do cliente:</label>
+                  <input type="text" class="form-control"
+                      placeholder="Digite o email aqui."
+                      formControlName="emailCliente"/>
+
+               <div class="text-danger"
+               *ngIf="fEdicao['emailCliente'].touched && fEdicao['emailCliente'].invalid">
+               Informe um email para a edição.
+                
+
+
+               </div>
+                      
+
+
+              </div>
+
+
+              <div class="mb-2">
+                  <label>Telefone do cliente:</label>
+                  <input type="text" class="form-control"
+                      placeholder="Digite o telefone aqui."
+                      formControlName="telefoneCliente"/>
+
+               <div class="text-danger"
+               *ngIf="fEdicao['telefoneCliente'].touched && fEdicao['telefoneCliente'].invalid">
+               Informe um telefone para edição com apenas 11 números
+
+               </div>
+                      
+
+
+              </div>
+
+
+              <div class="mb-2 d-grid">
+                  <input type="submit" class="btn btn-primary btn-sm"
+                      data-bs-dismiss="modal"
+                      [disabled]="formEdicao.invalid"
+                      value="Salvar Alterações"/>
+              </div>
+
+
+          </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
